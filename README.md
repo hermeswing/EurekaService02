@@ -1,4 +1,4 @@
-# 유레카 서비스 샘플 ( Eureka Service #01 )
+# 유레카 서비스 샘플 ( Eureka Service #02 )
 
 ## Spring Cloud 아키텍처 관계도
 ![크라우드 아키텍처](./md_img/cloud-3-dark.svg)
