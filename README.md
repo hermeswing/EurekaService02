@@ -85,7 +85,7 @@ tasks.named('test') {
 }
 ```
 
-#### EurekaClientApplication.java
+#### EurekaService02Application.java
 ```java
 package octopus;
 
@@ -99,6 +99,62 @@ public class EurekaService02Application {
     SpringApplication.run(EurekaService02Application.class, args);
   }
 
+}
+```
+#### ServiceController.java
+```java
+package octopus.service;
+
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.Collections;
+import java.util.Enumeration;
+
+@RestController
+@RequestMapping("/service02")
+@Slf4j
+public class ServiceController {
+  Environment env;
+
+  @Autowired
+  public ServiceController(Environment env) {
+    this.env = env;
+  }
+
+  @GetMapping("/welcome")
+  public String welcome() {
+    return "Service #02 입니다.";
+  }
+
+  @GetMapping("/message")
+  public String message(@RequestHeader("first-request") String header) {
+    log.info(header);
+    return "Service #02 입니다.";
+  }
+
+  @GetMapping("/check")
+  public String check(HttpServletRequest request) {
+    Enumeration<String> headers = request.getHeaderNames();
+    Collections.list(headers).stream().forEach(name -> {
+      Enumeration<String> values = request.getHeaders(name);
+      Collections.list(values).stream().forEach(value -> System.out.println(name + "=" + value));
+    });
+
+    log.info("Server port={}", request.getServerPort());
+
+    log.info("spring.cloud.client.hostname={}", env.getProperty("spring.cloud.client.hostname"));
+    log.info("spring.cloud.client.ip-address={}", env.getProperty("spring.cloud.client.ip-address"));
+
+    return String.format("Service #01 입니다. PORT %s"
+            , env.getProperty("local.server.port"));
+  }
 }
 ```
 
@@ -158,6 +214,8 @@ $ find . -name '*.jar'
   - Maven 실행 : ./mvn spring-boot:run -Dspring-boot.run.jvmArguments='-Dserver.port=8082'
   - Gradle 실행 : ./gradlew bootRun --args='--server.port=8082'
 
+## 브라우저 실행
+![크라우드 아키텍처](./md_img/service02_web.png)
 
 ## Git Push
 ```git
