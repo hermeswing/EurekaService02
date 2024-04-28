@@ -29,8 +29,8 @@ public class ServiceController {
     }
 
     @GetMapping("/message")
-    public String message(@RequestHeader("first-request") String header) {
-        log.info(header);
+    public String message(@RequestHeader("second-request") String header) {
+        log.info("RequestHeader 메시지 :: {}", header);
         return "Service #02 입니다.";
     }
 
@@ -47,7 +47,7 @@ public class ServiceController {
         log.info("spring.cloud.client.hostname={}", env.getProperty("spring.cloud.client.hostname"));
         log.info("spring.cloud.client.ip-address={}", env.getProperty("spring.cloud.client.ip-address"));
 
-        return String.format("Service #01 입니다. PORT %s"
+        return String.format("Service #02 입니다. PORT %s"
                 , env.getProperty("local.server.port"));
     }
 }
